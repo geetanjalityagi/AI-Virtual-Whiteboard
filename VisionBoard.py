@@ -7,6 +7,8 @@ cap = cv2.VideoCapture(1)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
+detector = handDetector()
+
 ptime = 0
 while(True):
     ok, img = cap.read()
@@ -15,6 +17,8 @@ while(True):
         break
 
     img = cv2.flip(img, 1)
+
+    img = detector.findhands(img)
 
     ctime = time.time()
     fps = 1/(ctime - ptime)
