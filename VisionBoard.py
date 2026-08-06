@@ -33,9 +33,11 @@ while(True):
         x1, y1 = lmlist[8][1], lmlist[8][2]
         x2, y2 = lmlist[12][1], lmlist[12][2]
 
-        if (lmlist[8][1] < lmlist[6][1]) and (lmlist[12][1] < lmlist[10][1]):
+        if (lmlist[8][2] < lmlist[6][2]) and (lmlist[12][2] < lmlist[10][2]):
             cv2.rectangle(img, (x1, y1), (x2,y2), colorBar, -1)
 
+        elif(lmlist[8][2] < lmlist[6][2]):
+            cv2.circle(img, (x1, y1), 12, (255, 0, 255), 3)
 
     ctime = time.time()
     fps = 1/(ctime - ptime)
