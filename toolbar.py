@@ -1,0 +1,26 @@
+import cv2
+
+TOOLS = [
+    {"name": "Red_Color",    "x1":240,  "x2":360,  "color":(0,0,255)},
+    {"name": "Purple_Color", "x1":360,  "x2":480,  "color":(255,105,180)},
+    {"name": "Green_Color",  "x1":480,  "x2":600,  "color":(0,255,0)},
+    {"name": "Blue_Color",   "x1":600,  "x2":720,  "color":(255,0,0)},
+    {"name": "Orange_Color", "x1":720,  "x2":840,  "color":(0,165,255)},
+    {"name": "Pink_Color",   "x1":840,  "x2":960, "color":(255,0,255)},
+    {"name": "Eraser",       "x1":1000, "x2":1280, "color":(0,0,0)}
+]
+
+def select_toolbar_tool(x, y):
+
+    if y < 150:
+
+        for tool in TOOLS:
+            if tool["x1"] < x < tool["x2"]:
+                name = tool["name"]
+                toolbar = cv2.imread(f"assets/{name}.jpg")
+                if toolbar is not None:
+                    toolbar = cv2.resize(toolbar, (1280, 150))
+                return tool["color"], toolbar
+
+    return None, None
+    
