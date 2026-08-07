@@ -1,24 +1,28 @@
 import cv2 
 import time
+import numpy as np
 from HandTrackingModule import handDetector
 from toolbar import select_toolbar_tool
 
 
-# Try opening camera 0 first, fall back to 1 if it fails
 cap = cv2.VideoCapture(1)
 
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
+imgcanvas = np.zeros((720, 1280, 3), np.uint8)
+
 toolbar = cv2.imread("assets/Colors.jpg")
 if toolbar is not None:
     toolbar = cv2.resize(toolbar, (1280, 150))
 
-detector = handDetector(num_hands=1)
+detector = handDetector()
 
+# ------------------------------------------------------------------
 colorBar = (255, 0, 0)
 brushThickness = 15
 eraserThickness = 80
+# ------------------------------------------------------------------
 
 ptime = 0
 while(True):
@@ -40,6 +44,8 @@ while(True):
 
         # 1. Selection Mode: Both index and middle fingers are up
         if (lmlist[8][2] < lmlist[6][2]) and (lmlist[12][2] < lmlist[10][2]):
+            xp, yp = 0, 0
+
             cv2.rectangle(img, (x1, y1 - 25), (x2, y2 + 25), colorBar, cv2.FILLED)
             
             # Select color/tool
@@ -52,6 +58,13 @@ while(True):
         # 2. Drawing Mode: Only index finger is up
         elif (lmlist[8][2] < lmlist[6][2]):
             cv2.circle(img, (x1, y1), 20, colorBar, cv2.FILLED)
+            if(xp == 0 and yp == 0):
+                xp, yp = x1, y1
+
+            cv2.line(img, (xp, yp), (x1, y1), colorBar, brushThickness)
+            cv2.line(imgcanvas, (xp, yp), (x1, y1), colorBar, brushThickness)
+
+            xp, yp = x1, y1
 
 
     # Overlay the toolbar at the top
@@ -62,8 +75,10 @@ while(True):
     fps = 1/(ctime - ptime) if (ctime - ptime) > 0 else 0
     ptime = ctime
 
+    img = cv2.addWeighted(img, 0.5, imgcanvas, 0.5, 0)
     cv2.putText(img, f"FPS : {fps : .2f}", (40, 180), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 1)
     cv2.imshow("img", img)
+    cv2.imshow("imgcanvas", imgcanvas)
 
     if cv2.waitKey(1) == ord('q'):
         break
