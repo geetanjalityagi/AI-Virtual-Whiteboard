@@ -27,9 +27,12 @@ def select_toolbar_tool(x, y):
 def show_eraser_size_toolbar(img):
     cv2.rectangle(img, (1060, 180), (1200, 310), (255, 123, 255), 2)
     cv2.putText(img, f"Select size", (1075, 215), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 255), 1)
-    cv2.putText(img, f"○ Small", (1075, 240), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
-    cv2.putText(img, f" Medium", (1075, 265), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
-    cv2.putText(img, f" Large", (1075, 290), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
+    cv2.circle(img, (1085, 233), 3, (255, 255, 255), cv2.FILLED)
+    cv2.putText(img, "Small", (1105, 240), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
+    cv2.circle(img, (1085, 258), 6, (255, 255, 255), cv2.FILLED)
+    cv2.putText(img, "Medium", (1105, 265), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
+    cv2.circle(img, (1085, 283), 9, (255, 255, 255), cv2.FILLED)
+    cv2.putText(img, "Large", (1105, 290), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
 
 
 def select_eraser_size(x, y):
