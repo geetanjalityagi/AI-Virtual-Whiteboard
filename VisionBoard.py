@@ -75,10 +75,15 @@ while(True):
     fps = 1/(ctime - ptime) if (ctime - ptime) > 0 else 0
     ptime = ctime
 
-    img = cv2.addWeighted(img, 0.5, imgcanvas, 0.5, 0)
+    imgGray = cv2.cvtColor(imgcanvas, cv2.COLOR_BGR2GRAY)
+    _, imgInv = cv2.threshold(imgGray, 50, 255, cv2.THRESH_BINARY_INV)
+    imgInv = cv2.cvtColor(imgInv, cv2.COLOR_GRAY2BGR)
+    img = cv2.bitwise_and(img, imgInv)
+    img = cv2.bitwise_or(img, imgcanvas)
+
+
     cv2.putText(img, f"FPS : {fps : .2f}", (40, 180), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 1)
     cv2.imshow("img", img)
-    cv2.imshow("imgcanvas", imgcanvas)
 
     if cv2.waitKey(1) == ord('q'):
         break
