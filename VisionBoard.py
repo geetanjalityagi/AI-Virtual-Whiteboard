@@ -61,8 +61,12 @@ while(True):
             if(xp == 0 and yp == 0):
                 xp, yp = x1, y1
 
-            cv2.line(img, (xp, yp), (x1, y1), colorBar, brushThickness)
-            cv2.line(imgcanvas, (xp, yp), (x1, y1), colorBar, brushThickness)
+            if colorBar == (0,0,0):
+                cv2.line(img, (xp, yp), (x1, y1), colorBar, eraserThickness)
+                cv2.line(imgcanvas, (xp, yp), (x1, y1), colorBar, eraserThickness)
+            else:
+                cv2.line(img, (xp, yp), (x1, y1), colorBar, brushThickness)
+                cv2.line(imgcanvas, (xp, yp), (x1, y1), colorBar, brushThickness)
 
             xp, yp = x1, y1
 
