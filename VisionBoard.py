@@ -2,7 +2,7 @@ import cv2
 import time
 import numpy as np
 from HandTrackingModule import handDetector
-from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size
+from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size, show_brush_size_slider, select_brush_size
 
 
 cap = cv2.VideoCapture(1)
@@ -11,6 +11,7 @@ cv2.namedWindow("Virtual Whiteboard")
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
+# Creating a window with black image
 imgcanvas = np.zeros((720, 1280, 3), np.uint8)
 
 toolbar = cv2.imread("assets/Colors.jpg")
@@ -21,10 +22,9 @@ detector = handDetector(num_hands = 1)
 
 # ------------------------------------------------------------------
 colorBar = (255, 0, 0)
-brushThickness = 15
+brushThickness = 5
 eraserThickness = 80
 # ------------------------------------------------------------------
-
 
 ptime = 0
 while(True):
@@ -58,10 +58,14 @@ while(True):
                     toolbar = new_toolbar
 
             # If eraser is selected, allow updating eraser thickness in selection mode
-            if colorBar == (0, 0, 0):
+            if colorBar == (0,0,0):
                 new_size = select_eraser_size(x1, y1)
                 if new_size is not None:
                     eraserThickness = new_size
+            else:
+                new_size = select_brush_size(x1, y1)
+                if new_size is not None:
+                    brushThickness = new_size
                         
 
         # 2. Drawing Mode: Only index finger is up
@@ -85,8 +89,10 @@ while(True):
         img[0:150, 0:1280] = toolbar
 
     # Overlay the eraser size toolbar if eraser is selected
-    if colorBar == (0, 0, 0):
+    if colorBar == (0,0,0):
         show_eraser_size_toolbar(img)
+    else:
+        show_brush_size_slider(img, brushThickness)
 
     ctime = time.time()
     fps = 1/(ctime - ptime) if (ctime - ptime) > 0 else 0
@@ -100,7 +106,7 @@ while(True):
 
 
     cv2.putText(img, f"FPS : {fps : .2f}", (40, 180), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 1)
-    cv2.imshow("img", img)
+    cv2.imshow("Virtual Whiteboard", img)
 
     if cv2.waitKey(1) == ord('q'):
         break
