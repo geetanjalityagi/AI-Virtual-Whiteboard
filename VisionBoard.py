@@ -12,7 +12,7 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
 # Creating a window with black image
-imgcanvas = np.zeros((720, 1280, 3), np.uint8)
+canvas = np.zeros((720, 1280, 3), np.uint8)
 
 toolbar = cv2.imread("assets/Colors.jpg")
 if toolbar is not None:
@@ -66,7 +66,7 @@ while(True):
                 new_size = select_brush_size(x1, y1)
                 if new_size is not None:
                     brushThickness = new_size
-                clear_canvas(imgcanvas, x1, y1)
+                clear_canvas(canvas, x1, y1)
 
         # 2. Drawing Mode: Only index finger is up
         elif (lmlist[8][2] < lmlist[6][2]):
@@ -76,10 +76,10 @@ while(True):
 
             if colorBar == (0, 0, 0):
                 cv2.line(img, (xp, yp), (x1, y1), colorBar, eraserThickness)
-                cv2.line(imgcanvas, (xp, yp), (x1, y1), colorBar, eraserThickness)
+                cv2.line(canvas, (xp, yp), (x1, y1), colorBar, eraserThickness)
             else:
                 cv2.line(img, (xp, yp), (x1, y1), colorBar, brushThickness)
-                cv2.line(imgcanvas, (xp, yp), (x1, y1), colorBar, brushThickness)
+                cv2.line(canvas, (xp, yp), (x1, y1), colorBar, brushThickness)
 
             xp, yp = x1, y1
 
@@ -99,11 +99,11 @@ while(True):
     fps = 1/(ctime - ptime) if (ctime - ptime) > 0 else 0
     ptime = ctime
 
-    imgGray = cv2.cvtColor(imgcanvas, cv2.COLOR_BGR2GRAY)
+    imgGray = cv2.cvtColor(canvas, cv2.COLOR_BGR2GRAY)
     _, imgInv = cv2.threshold(imgGray, 50, 255, cv2.THRESH_BINARY_INV)
     imgInv = cv2.cvtColor(imgInv, cv2.COLOR_GRAY2BGR)
     img = cv2.bitwise_and(img, imgInv)
-    img = cv2.bitwise_or(img, imgcanvas)
+    img = cv2.bitwise_or(img, canvas)
 
 
     cv2.putText(img, f"FPS : {fps : .2f}", (40, 180), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 1)
