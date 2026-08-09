@@ -25,14 +25,14 @@ def select_toolbar_tool(x, y):
     return None, None, None
 
 def show_eraser_size_toolbar(img):
-    cv2.rectangle(img, (1060, 180), (1200, 310), (255, 123, 255), 2)
+    cv2.rectangle(img, (1060, 180), (1200, 320), (123, 123, 123), 2)
     cv2.putText(img, f"Eraser size", (1075, 215), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 255), 1)
-    cv2.circle(img, (1085, 233), 3, (255, 255, 255), cv2.FILLED)
-    cv2.putText(img, "Small", (1105, 240), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
-    cv2.circle(img, (1085, 258), 6, (255, 255, 255), cv2.FILLED)
-    cv2.putText(img, "Medium", (1105, 265), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
-    cv2.circle(img, (1085, 283), 9, (255, 255, 255), cv2.FILLED)
-    cv2.putText(img, "Large", (1105, 290), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
+    cv2.circle(img, (1085, 243), 3, (255, 255, 255), cv2.FILLED)
+    cv2.putText(img, "Small", (1105, 250), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
+    cv2.circle(img, (1085, 268), 6, (255, 255, 255), cv2.FILLED)
+    cv2.putText(img, "Medium", (1105, 275), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
+    cv2.circle(img, (1085, 293), 9, (255, 255, 255), cv2.FILLED)
+    cv2.putText(img, "Large", (1105, 300), cv2.FONT_HERSHEY_PLAIN, 1.35, (255, 255, 255), 2)
 
 
 def select_eraser_size(x, y):
@@ -48,7 +48,7 @@ def select_eraser_size(x, y):
 
 def show_brush_size_slider(img, brushThickness):
     # Draw slider box background or border (450 to 810 horizontally, 160 to 210 vertically)
-    cv2.rectangle(img, (450, 160), (810, 210), (255, 123, 255), 2)
+    cv2.rectangle(img, (450, 160), (810, 210), (123, 123, 123), 2)
     cv2.putText(img, f"Brush Size: {brushThickness}", (460, 192), cv2.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 255), 1)
     
     # Draw slider track line (length 130: from x=620 to x=750)
@@ -69,3 +69,9 @@ def select_brush_size(x, y):
     return None
 
 
+def show_clear_button(img):
+    cv2.rectangle(img, (1150, 160), (1250, 210), (123, 123, 123), cv2.FILLED)
+    cv2.putText(img, "Clear", (1165, 195), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 1)
+
+
+        
