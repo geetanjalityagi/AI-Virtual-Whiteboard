@@ -2,7 +2,7 @@ import cv2
 import time
 import numpy as np
 from HandTrackingModule import handDetector
-from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size, show_brush_size_slider, select_brush_size
+from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size, show_brush_size_slider, select_brush_size, show_clear_button, clear_canvas
 
 
 cap = cv2.VideoCapture(1)
@@ -66,7 +66,7 @@ while(True):
                 new_size = select_brush_size(x1, y1)
                 if new_size is not None:
                     brushThickness = new_size
-                        
+                clear_canvas(imgcanvas, x1, y1)
 
         # 2. Drawing Mode: Only index finger is up
         elif (lmlist[8][2] < lmlist[6][2]):
@@ -93,6 +93,7 @@ while(True):
         show_eraser_size_toolbar(img)
     else:
         show_brush_size_slider(img, brushThickness)
+        show_clear_button(img)
 
     ctime = time.time()
     fps = 1/(ctime - ptime) if (ctime - ptime) > 0 else 0
