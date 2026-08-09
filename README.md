@@ -8,11 +8,12 @@ An interactive, touchless virtual whiteboard application built using Python, Ope
 
 - **Real-Time Hand Tracking**: Fast, low-latency hand landmark detection using Google's Mediapipe.
 - **Dual Modes**:
-  - **Selection Mode** (Index + Middle finger raised): Hover to pick colors, select eraser sizes, or adjust brush thickness.
+  - **Selection Mode** (Index + Middle finger raised): Hover to pick colors, select eraser sizes, adjust brush thickness, or clear the canvas.
   - **Drawing Mode** (Only Index finger raised): Draw freehand lines on the screen using the selected color and thickness.
 - **Diverse Paint Palette**: Pick Red, Purple, Green, Blue, Orange, and Pink directly from the top toolbar.
 - **Interactive Hand-Controlled Slider**: Adjust the brush thickness dynamically using a virtual horizontal slider on the screen (no mouse required).
 - **Eraser with Adjustable Thickness**: Quick size presets (Small, Medium, Large) for precision erasing.
+- **Clear Canvas**: Instantly reset/wipe the entire whiteboard canvas clean by hovering over the on-screen **Clear** button.
 - **FPS Counter**: On-screen real-time performance display.
 
 ---
@@ -78,3 +79,4 @@ Press **`q`** on your keyboard while focusing the whiteboard window to exit the 
 - **Adjust Brush Size**: When a drawing color is active:
   - A **Brush Size slider panel** appears horizontally below the toolbar. 
   - Drag your index finger horizontally along the track line (from left to right) to adjust the brush size (from `5` to `50` px). A dynamic preview circle displays the active size.
+- **Clear Canvas**: When a drawing color is active, a gray **Clear** button is shown in the top-right region of the screen (below the toolbar). Hover your finger over the button to clear the entire whiteboard canvas instantly.
