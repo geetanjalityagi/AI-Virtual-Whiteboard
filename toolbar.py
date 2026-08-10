@@ -69,11 +69,6 @@ def select_brush_size(x, y):
     return None
 
 
-def show_clear_button(img):
-    cv2.rectangle(img, (1150, 160), (1250, 210), (123, 123, 123), cv2.FILLED)
-    cv2.putText(img, "Clear", (1165, 195), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 1)
-
-def clear_canvas(imgcanvas, x, y):
-    if 1150 <= x <= 1250 and 160 <= y <= 210:
-        imgcanvas[:] = 0
+def clear_canvas(imgcanvas):
+    imgcanvas[:] = 0
         
