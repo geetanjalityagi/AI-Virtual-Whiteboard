@@ -13,7 +13,7 @@ An interactive, touchless virtual whiteboard application built using Python, Ope
 - **Diverse Paint Palette**: Pick Red, Purple, Green, Blue, Orange, and Pink directly from the top toolbar.
 - **Interactive Hand-Controlled Slider**: Adjust the brush thickness dynamically using a virtual horizontal slider on the screen (no mouse required).
 - **Eraser with Adjustable Thickness**: Quick size presets (Small, Medium, Large) for precision erasing.
-- **Clear Canvas**: Instantly reset/wipe the entire whiteboard canvas clean by hovering over the on-screen **Clear** button.
+- **Clear Canvas (Fist Gesture with Hold Timer)**: Clear the entire whiteboard canvas by holding a fist gesture (all fingers folded down) for 2.5 seconds. A visual countdown tracks progress to avoid accidental wipes.
 - **FPS Counter**: On-screen real-time performance display.
 
 ---
@@ -71,6 +71,7 @@ Press **`q`** on your keyboard while focusing the whiteboard window to exit the 
 | :---: | :---: | :---: |
 | ✌️ (Two fingers up) | **Selection Mode** | Select colors, change brush/eraser sizes. |
 | ☝️ (One finger up) | **Drawing Mode** | Write/draw on the digital canvas. |
+| ✊ (Fist / All fingers down) | **Clear Canvas** | Hold for 2.5 seconds to wipe the canvas clean. |
 
 ### 2. Toolbar Operations (Selection Mode)
 - **Select Color**: Hover your fingers over the color slots at the top toolbar to switch drawing colors.
@@ -79,4 +80,4 @@ Press **`q`** on your keyboard while focusing the whiteboard window to exit the 
 - **Adjust Brush Size**: When a drawing color is active:
   - A **Brush Size slider panel** appears horizontally below the toolbar. 
   - Drag your index finger horizontally along the track line (from left to right) to adjust the brush size (from `5` to `50` px). A dynamic preview circle displays the active size.
-- **Clear Canvas**: When a drawing color is active, a gray **Clear** button is shown in the top-right region of the screen (below the toolbar). Hover your finger over the button to clear the entire whiteboard canvas instantly.
+- **Clear Canvas (Fist Gesture)**: To prevent accidental wipes of the board, the clearing action is performed by holding a **fist** (all fingers folded down) for **2.5 seconds**. A dynamic countdown timer (e.g., `Clear: 2.1s`) displays next to your hand/wrist, followed by a green `Cleared!` confirmation.
