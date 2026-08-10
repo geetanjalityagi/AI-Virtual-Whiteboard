@@ -2,7 +2,7 @@ import cv2
 import time
 import numpy as np
 from HandTrackingModule import handDetector
-from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size, show_brush_size_slider, select_brush_size, show_clear_button, clear_canvas
+from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size, show_brush_size_slider, select_brush_size,  clear_canvas
 
 
 cap = cv2.VideoCapture(1)
@@ -26,6 +26,11 @@ brushThickness = 5
 eraserThickness = 80
 # ------------------------------------------------------------------
 
+# Fist gesture hold timer tracking
+fist_start_time = None
+fist_cleared = False
+hold_duration_threshold = 2.5  # seconds to hold fist to clear canvas
+
 ptime = 0
 while(True):
     ok, img = cap.read()
@@ -47,6 +52,8 @@ while(True):
         # 1. Selection Mode: Both index and middle fingers are up
         if (lmlist[8][2] < lmlist[6][2]) and (lmlist[12][2] < lmlist[10][2]):
             xp, yp = 0, 0
+            fist_start_time = None
+            fist_cleared = False
 
             cv2.rectangle(img, (x1, y1 - 25), (x2, y2 + 25), colorBar, cv2.FILLED)
             
@@ -66,10 +73,12 @@ while(True):
                 new_size = select_brush_size(x1, y1)
                 if new_size is not None:
                     brushThickness = new_size
-                clear_canvas(canvas, x1, y1)
+                # clear_canvas(canvas, x1, y1)
 
         # 2. Drawing Mode: Only index finger is up
         elif (lmlist[8][2] < lmlist[6][2]):
+            fist_start_time = None
+            fist_cleared = False
             cv2.circle(img, (x1, y1), 20, colorBar, cv2.FILLED)
             if(xp == 0 and yp == 0):
                 xp, yp = x1, y1
@@ -83,6 +92,42 @@ while(True):
 
             xp, yp = x1, y1
 
+        # 3. Fist Gesture: All fingers down
+        elif (lmlist[8][2] > lmlist[6][2]) and (lmlist[12][2] > lmlist[10][2]) and (lmlist[16][2] > lmlist[14][2]) and (lmlist[20][2] > lmlist[18][2]):
+            if not fist_cleared:
+                if fist_start_time is None:
+                    fist_start_time = time.time()
+                
+                elapsed = time.time() - fist_start_time
+                remaining = max(0.0, hold_duration_threshold - elapsed)
+                
+                # Visual countdown indicator near the wrist landmark (lmlist[0])
+                wrist_x, wrist_y = lmlist[0][1], lmlist[0][2]
+                cv2.rectangle(img, (wrist_x - 110, wrist_y + 15), (wrist_x + 130, wrist_y + 55), (0, 0, 0), cv2.FILLED)
+                cv2.rectangle(img, (wrist_x - 110, wrist_y + 15), (wrist_x + 130, wrist_y + 55), (0, 0, 255), 2)
+                cv2.putText(img, f"Clear: {remaining:.1f}s", (wrist_x - 100, wrist_y + 45), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+
+                if elapsed >= hold_duration_threshold:
+                    clear_canvas(canvas)
+                    fist_cleared = True
+                    fist_start_time = None
+            else:
+                # Keep displaying "Cleared!" while they continue to hold the fist
+                wrist_x, wrist_y = lmlist[0][1], lmlist[0][2]
+                cv2.rectangle(img, (wrist_x - 110, wrist_y + 15), (wrist_x + 130, wrist_y + 55), (0, 100, 0), cv2.FILLED)
+                cv2.rectangle(img, (wrist_x - 110, wrist_y + 15), (wrist_x + 130, wrist_y + 55), (0, 255, 0), 2)
+                cv2.putText(img, "Cleared!", (wrist_x - 70, wrist_y + 45), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+
+        # 4. Other/Neutral Gesture
+        else:
+            fist_start_time = None
+            fist_cleared = False
+    else:
+        # No hand detected
+        fist_start_time = None
+        fist_cleared = False
+
+
 
     # Overlay the toolbar at the top
     if toolbar is not None:
@@ -93,7 +138,6 @@ while(True):
         show_eraser_size_toolbar(img)
     else:
         show_brush_size_slider(img, brushThickness)
-        show_clear_button(img)
 
     ctime = time.time()
     fps = 1/(ctime - ptime) if (ctime - ptime) > 0 else 0
