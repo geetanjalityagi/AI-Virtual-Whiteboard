@@ -52,4 +52,7 @@ def shape_recognition(canvas):
         if circularity > 0.80:
             shape_name = "Circle"
 
+    if shape_name == "Unknown":
+        return None
+
     return shape_name, approx
