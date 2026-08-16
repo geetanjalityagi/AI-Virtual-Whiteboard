@@ -3,7 +3,7 @@ import time
 import numpy as np
 from HandTrackingModule import handDetector
 from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size, show_brush_size_slider, select_brush_size,  clear_canvas
-
+from shape_recognition import shape_recognition
 
 cap = cv2.VideoCapture(1)
 cv2.namedWindow("Virtual Whiteboard")
@@ -31,8 +31,15 @@ fist_start_time = None
 fist_cleared = False
 hold_duration_threshold = 2.5  # seconds to hold fist to clear canvas
 
+# Shape recognition state tracking variables
+was_drawing = False
+detected_shape = None
+detected_contour = None
+shape_display_expiry = 0
+
 ptime = 0
 while(True):
+    is_currently_drawing = False
     ok, img = cap.read()
 
     if not ok:
@@ -73,10 +80,11 @@ while(True):
                 new_size = select_brush_size(x1, y1)
                 if new_size is not None:
                     brushThickness = new_size
-                # clear_canvas(canvas, x1, y1)
 
         # 2. Drawing Mode: Only index finger is up
         elif (lmlist[8][2] < lmlist[6][2]):
+            if colorBar != (0, 0, 0):
+                is_currently_drawing = True
             fist_start_time = None
             fist_cleared = False
             cv2.circle(img, (x1, y1), 20, colorBar, cv2.FILLED)
@@ -127,6 +135,27 @@ while(True):
         fist_start_time = None
         fist_cleared = False
 
+    # Check for transition: user stopped drawing
+    if was_drawing and not is_currently_drawing:
+        result = shape_recognition(canvas)
+        if result is not None:
+            detected_shape, detected_contour = result
+            shape_display_expiry = time.time() + 3.0  # Display for 3 seconds
+            print(f"[DEBUG] Drawing stopped. Shape recognized: '{detected_shape}' with {len(detected_contour)} corners")
+        else:
+            detected_shape = None
+            detected_contour = None
+            shape_display_expiry = 0
+            print("[DEBUG] Drawing stopped. No contours found on canvas.")
+
+    # If user starts drawing again, clear previous shape display immediately
+    if is_currently_drawing:
+        detected_shape = None
+        detected_contour = None
+        shape_display_expiry = 0
+
+    was_drawing = is_currently_drawing
+
 
 
     # Overlay the toolbar at the top
@@ -144,11 +173,16 @@ while(True):
     ptime = ctime
 
     imgGray = cv2.cvtColor(canvas, cv2.COLOR_BGR2GRAY)
-    _, imgInv = cv2.threshold(imgGray, 50, 255, cv2.THRESH_BINARY_INV)
+    _, imgInv = cv2.threshold(imgGray, 1, 255, cv2.THRESH_BINARY_INV)
     imgInv = cv2.cvtColor(imgInv, cv2.COLOR_GRAY2BGR)
     img = cv2.bitwise_and(img, imgInv)
     img = cv2.bitwise_or(img, canvas)
 
+    # Render recognized shape and name if within the display duration
+    if time.time() < shape_display_expiry and detected_shape is not None:
+        if detected_contour is not None:
+            cv2.drawContours(img, [detected_contour], -1, (0, 255, 0), 3)
+        cv2.putText(img, f"Shape: {detected_shape}", (40, 220), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
 
     cv2.putText(img, f"FPS : {fps : .2f}", (40, 180), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 1)
     cv2.imshow("Virtual Whiteboard", img)
