@@ -49,7 +49,7 @@ def shape_recognition(canvas):
             circularity = (4 * np.pi * area) / (perimeter * perimeter)
         else:
             circularity = 0
-        if circularity > 0.80:
+        if circularity > 0.60:
             shape_name = "Circle"
 
     if shape_name == "Unknown":
