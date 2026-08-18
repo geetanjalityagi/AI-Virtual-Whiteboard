@@ -4,6 +4,7 @@ import numpy as np
 from HandTrackingModule import handDetector
 from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size, show_brush_size_slider, select_brush_size,  clear_canvas
 from shape_recognition import shape_recognition
+from shape_generator import draw_perfect_shape
 
 cap = cv2.VideoCapture(1)
 cv2.namedWindow("Virtual Whiteboard")
@@ -137,10 +138,13 @@ while(True):
 
     # Check for transition: user stopped drawing
     if was_drawing and not is_currently_drawing:
-        result = shape_recognition(canvas)
+        result = shape_recognition(canvas, img)
         if result is not None:
             detected_shape, detected_contour = result
             shape_display_expiry = time.time() + 3.0  # Display for 3 seconds
+            # Clear the freehand stroke and replace it with a perfect shape on canvas
+            clear_canvas(canvas)
+            draw_perfect_shape(canvas, detected_shape, detected_contour, colorBar, brushThickness)
         else:
             detected_shape = None
             detected_contour = None
@@ -179,7 +183,8 @@ while(True):
     # Render recognized shape and name if within the display duration
     if time.time() < shape_display_expiry and detected_shape is not None:
         if detected_contour is not None:
-            cv2.drawContours(img, [detected_contour], -1, (0, 255, 0), 3)
+            # Draw the perfect shape outline on the display frame as a visual highlight
+            draw_perfect_shape(img, detected_shape, detected_contour, (0, 255, 0), 3)
         cv2.putText(img, f"Shape: {detected_shape}", (40, 220), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
 
     cv2.putText(img, f"FPS : {fps : .2f}", (40, 180), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 1)
