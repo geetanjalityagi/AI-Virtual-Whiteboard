@@ -141,12 +141,10 @@ while(True):
         if result is not None:
             detected_shape, detected_contour = result
             shape_display_expiry = time.time() + 3.0  # Display for 3 seconds
-            print(f"[DEBUG] Drawing stopped. Shape recognized: '{detected_shape}' with {len(detected_contour)} corners")
         else:
             detected_shape = None
             detected_contour = None
             shape_display_expiry = 0
-            print("[DEBUG] Drawing stopped. No contours found on canvas.")
 
     # If user starts drawing again, clear previous shape display immediately
     if is_currently_drawing:
