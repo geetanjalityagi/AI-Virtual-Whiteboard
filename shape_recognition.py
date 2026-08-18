@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def shape_recognition(canvas):
+def shape_recognition(canvas, img):
     gray = cv2.cvtColor(canvas, cv2.COLOR_BGR2GRAY)
 
     _, thresh = cv2.threshold(
@@ -40,10 +40,6 @@ def shape_recognition(canvas):
             shape_name = "Square"
         else:
             shape_name = "Rectangle"
-    elif corners == 5:
-        shape_name = "Pentagon"
-    elif corners == 6:
-        shape_name = "Hexagon"
     else:
         if perimeter > 0:
             circularity = (4 * np.pi * area) / (perimeter * perimeter)
@@ -56,3 +52,4 @@ def shape_recognition(canvas):
         return None
 
     return shape_name, approx
+
