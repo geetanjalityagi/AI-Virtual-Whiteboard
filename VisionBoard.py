@@ -27,6 +27,9 @@ brushThickness = 5
 eraserThickness = 80
 # ------------------------------------------------------------------
 
+points = []
+xp, yp = 0, 0
+
 # Fist gesture hold timer tracking
 fist_start_time = None
 fist_cleared = False
@@ -138,7 +141,7 @@ while(True):
 
     # Check for transition: user stopped drawing
     if was_drawing and not is_currently_drawing:
-        result = shape_recognition(canvas, img)
+        result = shape_recognition(canvas)
         if result is not None:
             detected_shape, detected_contour = result
             shape_display_expiry = time.time() + 3.0  # Display for 3 seconds
@@ -149,6 +152,9 @@ while(True):
             detected_shape = None
             detected_contour = None
             shape_display_expiry = 0
+        # Always reset points after a stroke ends so the next stroke starts fresh
+        points.clear()
+        xp, yp = 0, 0
 
     # If user starts drawing again, clear previous shape display immediately
     if is_currently_drawing:
