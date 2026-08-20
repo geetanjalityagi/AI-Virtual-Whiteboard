@@ -24,7 +24,7 @@ def shape_recognition(canvas):
     area = cv2.contourArea(contour)
     perimeter = cv2.arcLength(contour, True)
 
-    if perimeter == 0:
+    if perimeter == 0 or area < 100:
         return None
 
     # ------------------------------------------------------------------
