@@ -7,6 +7,9 @@ from shape_recognition import shape_recognition
 from shape_generator import draw_perfect_shape
 
 cap = cv2.VideoCapture(1)
+if not cap.isOpened():
+    cap = cv2.VideoCapture(0)
+
 cv2.namedWindow("Virtual Whiteboard")
 
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -196,8 +199,13 @@ while(True):
     cv2.putText(img, f"FPS : {fps : .2f}", (40, 180), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 1)
     cv2.imshow("Virtual Whiteboard", img)
 
-    if cv2.waitKey(1) == ord('q'):
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
         break
+    elif key == ord('s'):
+        filename = f"drawing_{int(time.time())}.png"
+        cv2.imwrite(filename, canvas)
+        print(f"Canvas saved to {filename}")
 
 cap.release()
 cv2.destroyAllWindows()
