@@ -22,6 +22,7 @@ An interactive, touchless virtual whiteboard built with **Python**, **OpenCV**, 
 - **Eraser with 3 Size Presets** — Small (25 px), Medium (50 px), Large (80 px).
 - **Fist-Hold Clear Canvas** — Hold a fist for **2.5 seconds** to wipe the canvas with a live countdown timer.
 - **Green Shape Highlight** — After snap-to-shape, the perfect outline is shown in green with a label for 3 seconds.
+- **One-Key Canvas Save** — Press **`s`** at any time to save a timestamped PNG screenshot of your canvas (e.g., `drawing_1771500000.png`).
 - **FPS Counter** — On-screen real-time performance display.
 
 ---
