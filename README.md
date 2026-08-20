@@ -59,7 +59,7 @@ When the user lifts their index finger (stroke ends), the following pipeline run
 Canvas frame
   └─► Grayscale → Binary Threshold (threshold = 1)
         └─► findContours (RETR_EXTERNAL)
-              └─► Largest contour by area
+              └─► Largest contour by area (filter out noise if area < 100)
                     ├─► minAreaRect → elongation = long_side / short_side
                     │     └─► elongation > 5.0  ──────────────────► LINE
                     │           (endpoints extracted from rotated bbox)
@@ -121,10 +121,10 @@ pip install opencv-python mediapipe numpy
 python VisionBoard.py
 ```
 
-Press **`q`** while the whiteboard window is focused to exit.
+Press **`q`** while the whiteboard window is focused to exit.  
+Press **`s`** to save a screenshot of your canvas to a PNG file (e.g., `drawing_1771500000.png`).
 
-> **Webcam note**: The app opens camera index `1` by default (`cv2.VideoCapture(1)`).  
-> If your webcam is not detected, change `1` to `0` on line 9 of `VisionBoard.py`.
+> **Webcam note**: The app automatically tries camera index `1` (`cv2.VideoCapture(1)`), and automatically falls back to camera index `0` if index `1` is unavailable.
 
 ---
 
