@@ -71,4 +71,8 @@ def select_brush_size(x, y):
 
 def clear_canvas(imgcanvas):
     imgcanvas[:] = 0
-        
+
+
+def show_save_image_button(img):
+    cv2.rectangle(img, (40, 160), (130,210), (123, 123, 123), -1)
+    cv2.putText(img, f"Save", (55, 195), cv2.FONT_HERSHEY_PLAIN, 1.8, (255, 255, 255), 1)
