@@ -2,7 +2,7 @@ import cv2
 import time
 import numpy as np
 from HandTrackingModule import handDetector
-from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size, show_brush_size_slider, select_brush_size,  clear_canvas
+from toolbar import select_toolbar_tool, show_eraser_size_toolbar, select_eraser_size, show_brush_size_slider, select_brush_size,  clear_canvas, show_save_image_button
 from shape_recognition import shape_recognition
 from shape_generator import draw_perfect_shape
 
@@ -147,7 +147,7 @@ while(True):
         result = shape_recognition(canvas)
         if result is not None:
             detected_shape, detected_contour = result
-            shape_display_expiry = time.time() + 3.0  # Display for 3 seconds
+            shape_display_expiry = time.time() + 3.0 
             # Clear the freehand stroke and replace it with a perfect shape on canvas
             clear_canvas(canvas)
             draw_perfect_shape(canvas, detected_shape, detected_contour, colorBar, brushThickness)
@@ -168,7 +168,6 @@ while(True):
     was_drawing = is_currently_drawing
 
 
-
     # Overlay the toolbar at the top
     if toolbar is not None:
         img[0:150, 0:1280] = toolbar
@@ -178,6 +177,8 @@ while(True):
         show_eraser_size_toolbar(img)
     else:
         show_brush_size_slider(img, brushThickness)
+        show_save_image_button(img)
+
 
     ctime = time.time()
     fps = 1/(ctime - ptime) if (ctime - ptime) > 0 else 0
@@ -196,7 +197,7 @@ while(True):
             draw_perfect_shape(img, detected_shape, detected_contour, (0, 255, 0), 3)
         cv2.putText(img, f"Shape: {detected_shape}", (40, 220), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
 
-    cv2.putText(img, f"FPS : {fps : .2f}", (40, 180), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 1)
+    cv2.putText(img, f"FPS : {fps : .2f}", (40, 680), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 1)
     cv2.imshow("Virtual Whiteboard", img)
 
     key = cv2.waitKey(1) & 0xFF
